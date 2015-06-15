@@ -1,0 +1,42 @@
+---
+title: "Regression Models Course Project"
+author: "Chris van Hasselt"
+date: "June 21, 2015"
+output: pdf_document
+geometry: margin=.75in
+---
+
+```{r loadLibaries,echo=FALSE,}
+library(UsingR)
+data("mtcars")
+```
+
+# Executive Summary
+
+This report analyzes the relationship between miles per gallon (MPG) and an automobile's type of transmission, using the *mtcars* dataset.  Specifically, the report analyzes two questions:
+
+#. Is an automatic or manual transmission better for MPG?
+#. What is the quantified MPG difference between automatic and manual transmissions?  
+
+# Methodology
+
+The *mtcars* dataset consists of rows of data on different makes and models of cars, each type of car represented by a single row.  The data has two relevant columns for consideration, the *am* column and the *mpg* column.  *mpg* is the rated miles per gallon for a car; *am* takes the value 0 for automatic, or 1 for manual.
+
+Considering the *mpg* as the outcome variable, the analysis uses the transmission type as a predictor.  With only two values, the *am* variable, while it is numeric, is essentially a factor variable.  
+
+We would expect no difference in average mileage between cars with automatic transmissions and cars with manual transmissions.  That is, if the mean mileage for cars with manual is $\bar{x}_{M}$ and the mean mileage for cars with automatic transmission is $\bar{x}_{A}$, then 
+
+$$
+H_0: \bar{x}_{A} = \bar{x}_{M} and H_a: \bar{x}_{A} \neq \bar{x}_{M}
+$$
+
+Further, we want to investigate whether any difference in average *mpg* can be attributed to transmission type.
+
+
+
+```{r loadLibaries,echo=FALSE,}
+library(UsingR)
+data("mtcars")
+```
+
+
