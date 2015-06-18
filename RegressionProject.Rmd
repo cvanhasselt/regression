@@ -24,32 +24,52 @@ This report analyzes the relationship between miles per gallon (MPG) and an auto
 #. Is an automatic or manual transmission better for MPG?
 #. What is the quantified MPG difference between automatic and manual transmissions?  
 
-# Methodology
-
-The *mtcars* dataset consists of rows of data on different makes and models of cars, each type of car represented by a single row.  The data has two relevant columns for consideration, the *am* column and the *mpg* column.  *mpg* is the rated miles per gallon for a car; *am* takes the value 0 for automatic, or 1 for manual.
-
-We want to investigate whether any difference in average *mpg* can be attributed to transmission type.  We could assert a null hypothesis of no difference in average mileage between cars with automatic transmissions and cars with manual transmissions.  That is, if the mean mileage for cars with manual is $\bar{x}_{M}$ and the mean mileage for cars with automatic transmission is $\bar{x}_{A}$, then we could formulate a null hypothesis and alternate hypothesis as
-
-$$
-H_0: \bar{x}_{A} = \bar{x}_{M} and H_a: \bar{x}_{A} \neq \bar{x}_{M}
-$$
-
-But other dataset variables could explain any difference in *mpg*.  For example the cars weight (*wt*), engine displacement (*disp*), the rear axle ratio (*drat*), horsepower (*hp*), number of carburetors (*carb*), number of cylinders (*cyl*), or the number of gears (*gear*) all contribute to overall car performance.  How do you separate out the effect of just the transmission type?  
-
 # Exploratory Analysis
 
-Pairwise plots of *mpg* with these other variables reveal the complexities in the data.  We can see a what looks like a difference between manual and automatic transmissions, with *mpg* increasing for manual transmissions.  But there is a noticeable downward trend when considering *mpg* and *wt*, *disp*, and *carb*.  It is not clear what is happening with *drat* or *gear*.  The number of gears and the rear axle ratio are key attributes of the drive train, so we would expect some combination of these to affect gas mileage.  [see Figure 1, appendix]
+The *mtcars* dataset consists of rows of data on different makes and models of cars, each row representing a different type of car.  The two relevant columns to consider are the *am* column and the *mpg* column.  *am*, the transmission type, takes the value 0 for automatic, or 1 for manual; *mpg* is the rated miles per gallon.
 
-Looking at the coefficients of the linear model, the estimates suggest that the type of transmission has a positive effect on *mpg* with automatic transmissions improving mileage.  But we also see that *wt* has a strong negative pull on *mpg*, with the implication that for cars of equal weight, an automatic transmission might give better gas mileage, but choosing a smaller car would save more gas.
+We want to investigate whether any difference in average *mpg* can be attributed to transmission type.  We could assert a null hypothesis of no difference in average mileage between cars with automatic transmissions and cars with manual transmissions.  That is, if the mean mileage for cars with manual is $\bar{x}_{M}$ and the mean mileage for cars with automatic transmission is $\bar{x}_{A}$, then we could formulate a null and alternate hypotheses as
 
-# Multivariable Model
+$$
+H_0: \bar{x}_{A} = \bar{x}_{M}, and H_a: \bar{x}_{A} \neq \bar{x}_{M}
+$$
 
-Supposing a linear model between taking into account all variables
+$\bar{x}_{M} = 17.15$ and $\bar{x}_{A} = 24.39$ are different, but a simple application of a t-test is not appropriate; that type of analysis assumes the compared groups are otherwise equivalent.  The two groups have many differences, with other variables potentially explaining any difference in *mpg*.  How do you separate out the effect of just the transmission type, when we rationally know other factors also affect mileage?
 
-\newpage
+Considering automotive mechanics, it is reasonable to assume horsepower (*hp*), a measurement of engine performance, is related to the engine displacement, number of carburetors, and number of cylinders.  Indeed, *hp*, *carb*, *disp* and *cyl* are all correlated positively; *hp*, *carb*, *cyl*, and *disp* are all negatively correlated with *mpg*.  The number of cylinders *cyl* is highly correlated with *disp*.  Moreover, among these power-plant measures, the strongest _negative_ correlation with *mpg* is *cyl*.  Thus, in the interest of simplifying the model, *cyl* will be used as a proxy for *hp*, *carb* and *disp*.  
+
+
+
+```{r correlates, echo=FALSE}
+# correlation of horsepower with displacement, cylinders
+cor(mtcars$hp,mtcars$disp)
+cor(mtcars$hp,mtcars$cyl)
+
+# correlation of mpg with horsepower, cylinders, displacement
+cor(mtcars$mpg,mtcars$hp)
+cor(mtcars$mpg,mtcars$cyl)
+cor(mtcars$mpg,mtcars$disp)
+
+# correlation of cyl with disp
+cor(mtcars$cyl,mtcars$disp)
+```
+
+Pairwise plots of *mpg* with other variables reveal the complexities in the data.  We can see a what looks like a difference between manual and automatic transmissions, with *mpg* increasing for manual transmissions.  But there is a noticeable downward trend when considering *mpg* and *wt*, *disp*, and *carb*.  It is not clear what is happening with *drat* or *gear*.  The number of gears and the rear axle ratio are key attributes of the drive train, so we would expect some combination of these to affect gas mileage.  [see Figure 1, appendix]
+
+There are some variables from the dataset that are result measurements or 
+
+# Multivariate Model
+
+Supposing a linear model relating *mpg* and *am*, 
+
+$$
+Y_{mpg} = \beta_0 + \beta_{1}X_am + \epsilon
+$$
+\pagebreak
+
 # Appendix: Plots and Code
 ```{r plot,echo=FALSE, results='hide'}
-pairs(mpg ~ am + wt + disp + gear+ carb + drat + hp + cyl,
+pairs(mpg ~ am + wt + disp + gear+ carb + drat + cyl +hp,
       data=mtcars,
       main="MT Cars Data Exploration")
 ```
