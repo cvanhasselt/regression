@@ -3,7 +3,8 @@ fit <- lm(mpg~ factor(cyl) + wt, data=mtcars )
 summary(fit)$coef
 fit2 <- lm(mpg ~ factor(cyl), data=mtcars)
 summary(fit2)$coef
-
+fit3 <- lm(mpg ~ factor(cyl) * wt,mtcars)
+summary(fit3)$coef
 
 # Q5,6
 
